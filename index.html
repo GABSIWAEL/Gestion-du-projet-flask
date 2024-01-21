@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion de Vente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.css"
+        integrity="sha512-oBqDVmMz9ATKxIepFOI6iWx2NhtSjVItOsJ5er6MTtz0NPPHEhSuLFOtZIe3ZsTOtBU2kz6qKazUfx7t0f9t3Vg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
         body {
             margin: 20px;
@@ -13,10 +17,46 @@
             display: flex;
             flex-direction: column;
             margin: 20px;
+            font-family: Arial, sans-serif;
         }
+
+        body::before {
+            content: "  Une Version Demonstartive Sous Les Droits Du";
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 40px;
+            font-weight: bold;
+            color: rgb(255, 0, 0);
+            z-index: 1000;
+            pointer-events: none;
+            white-space: pre;
+            /* Preserve whitespace and allow line breaks */
+        }
+
+        body::after {
+            content: "     Créateur Wael Gabsi";
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 40px;
+            font-weight: bold;
+            color: rgb(255, 0, 0);
+            z-index: 1000;
+            pointer-events: none;
+            white-space: pre;
+            /* Preserve whitespace and allow line breaks */
+        }
+
 
         .section {
             margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .details {
@@ -33,10 +73,12 @@
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         ul {
             list-style: none;
+            padding: 0;
         }
 
         li {
@@ -60,11 +102,12 @@
         input[type="date"],
         input[type="tel"],
         select {
-            width: 200px;
+            width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
 
         input[type="submit"] {
@@ -74,10 +117,18 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         input[type="submit"]:hover {
             background-color: #27ae60;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -174,6 +225,76 @@
             {% endfor %}
         </ul>
     </div>
+
+    <div class="section" id="vente-chart">
+        <h1>Statistiques des Ventes</h1>
+        <canvas id="venteChart"></canvas>
+    </div>
+
+    <div class="section" id="depense-chart">
+        <h1>Statistiques des Dépenses</h1>
+        <canvas id="depenseChart"></canvas>
+    </div>
+
+    <div class="section" id="commande-chart">
+        <h1>Statistiques des Commandes</h1>
+        <canvas id="commandeChart"></canvas>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Sample data for demonstration purposes
+            const ventesData = JSON.parse('{{ ventes|tojson|safe }}');
+            const depensesData = JSON.parse('{{ depenses|tojson|safe }}');
+            const commandesData = JSON.parse('{{ commandes|tojson|safe }}');
+
+            // Get the canvas elements
+            const venteChartCanvas = document.getElementById('venteChart');
+            const depenseChartCanvas = document.getElementById('depenseChart');
+            const commandeChartCanvas = document.getElementById('commandeChart');
+
+            // Create Chart instances
+            const venteChart = new Chart(venteChartCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5'],
+                    datasets: [{
+                        label: 'Ventes',
+                        borderColor: 'rgb(75, 192, 192)',
+                        data: ventesData,
+                    }],
+                },
+            });
+
+            const depenseChart = new Chart(depenseChartCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5'],
+                    datasets: [{
+                        label: 'Dépenses',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: depensesData,
+                    }],
+                },
+            });
+
+            const commandeChart = new Chart(commandeChartCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5'],
+                    datasets: [{
+                        label: 'Commandes',
+                        borderColor: 'rgb(255, 205, 86)',
+                        data: commandesData,
+                    }],
+                },
+            });
+        });
+    </script>
+
 </body>
 
 </html>
