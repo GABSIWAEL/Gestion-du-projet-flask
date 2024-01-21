@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Vente</title>
+    <style>
+        body {
+            margin: 20px;
+            background-color: #f5f5f5;
+            justify-content: space-between;
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .details {
+            display: none;
+        }
+
+        .commande:hover .details {
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            background-color: #3498db;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            background-color: #ecf0f1;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="tel"],
+        select {
+            width: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="section" id="add-vente">
+        <h1>Ajouter une Vente</h1>
+        <form method="post" action="{{ url_for('ajouter_vente') }}">
+            <!-- Add the 'montant_vente' field -->
+            <label for="montant_vente">Montant de la Vente :</label>
+            <input type="text" id="montant_vente" name="montant_vente" required>
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+
+    <div class="section" id="add-depense">
+        <h1>Ajouter une Dépense</h1>
+        <form method="post" action="{{ url_for('ajouter_depense') }}">
+            <!-- Add the 'montant_depense' field -->
+            <label for="montant_depense">Montant de la Dépense :</label>
+            <input type="text" id="montant_depense" name="montant_depense" required>
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+
+    <div class="section" id="add-commande">
+        <h1>Ajouter une Commande</h1>
+        <form method="post" action="{{ url_for('ajouter_commande') }}">
+            <!-- Add the 'date_commande', 'prenom', 'nom', 'telephone', 'adresse', 'transporteur', 'montant_commande', 'payee' fields -->
+            <label for="date_commande">Date de la Commande :</label>
+            <input type="date" id="date_commande" name="date_commande" required>
+
+            <label for="prenom">Prénom :</label>
+            <input type="text" id="prenom" name="prenom" required>
+
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
+
+            <label for="telephone">Numéro de téléphone :</label>
+            <input type="tel" id="telephone" name="telephone" required>
+
+            <label for="adresse">Adresse :</label>
+            <input type="text" id="adresse" name="adresse" required>
+
+            <label for="transporteur">Transporteur :</label>
+            <select id="transporteur" name="transporteur">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>
+            </select>
+
+            <label for="montant_commande">Montant de la Commande :</label>
+            <input type="text" id="montant_commande" name="montant_commande" required>
+
+            <label for="payee">Commande payée :</label>
+            <input type="checkbox" id="payee" name="payee">
+
+            <input type="submit" value="Ajouter">
+        </form>
+    </div>
+
+    <div class="section" id="list-vente">
+        <h1>Liste des Ventes</h1>
+        <ul>
+            {% for vente in ventes %}
+            <li>{{ vente }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section" id="list-depense">
+        <h1>Liste des Dépenses</h1>
+        <ul>
+            {% for depense in depenses %}
+            <li>{{ depense }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section" id="list-commande">
+        <h1>Liste des Commandes</h1>
+        <ul>
+            {% for commande in commandes %}
+            <li class="commande">
+                <span>{{ commande.date }} - {{ commande.montant }}</span>
+                <div class="details">
+                    <p>Prénom: {{ commande.prenom }}</p>
+                    <p>Nom: {{ commande.nom }}</p>
+                    <p>Numéro de téléphone: {{ commande.telephone }}</p>
+                    <p>Adresse: {{ commande.adresse }}</p>
+                    <p>Transporteur: {% if commande.transporteur %} Oui {% else %} Non {% endif %}</p>
+                    <p>Payée: {% if commande.payee %} Oui {% else %} Non {% endif %}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+</html>
